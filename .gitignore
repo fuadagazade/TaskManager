@@ -4,3 +4,5 @@
 
 /TaskManager.API/obj
 /.vs/TaskManager/v17
+/TaskManager.API/bin/Debug/net6.0
+/TaskManager.API/bin/Release/net6.0
