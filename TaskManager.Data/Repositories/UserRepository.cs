@@ -74,6 +74,36 @@ public class UserRepository : IUserRepository
         return result;
     }
 
+    public long Exists(string email, long organizationId)
+    {
+        string command = @"SELECT Id FROM Users WHERE Email = @Email AND OrganizationId = @OrganizationId";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Email", email);
+        parameters.Add("@OrganizationId", organizationId);
+
+
+        long result = 0;
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = connection.ExecuteScalar<long>(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result;
+    }
+
     public Task<IEnumerable<User>> Get()
     {
         throw new NotImplementedException();
