@@ -6,3 +6,11 @@
 /.vs/TaskManager/v17
 /TaskManager.API/bin/Debug/net6.0
 /TaskManager.API/bin/Release/net6.0
+/TaskManager.Utility/bin/Debug/net6.0
+/TaskManager.Utility/obj
+/TaskManager.Service/bin/Debug/net6.0
+/TaskManager.Service/obj
+/TaskManager.Data/bin/Debug/net6.0
+/TaskManager.Data/obj
+/TaskManager.Core/bin/Debug/net6.0
+/TaskManager.Core/obj
