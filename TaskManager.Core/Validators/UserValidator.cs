@@ -1,32 +1,25 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
+using TaskManager.Core.Interfaces.Services;
 using TaskManager.Core.Models;
 
 namespace TaskManager.Core.Validators;
 public class UserValidator : AbstractValidator<User>
 {
-    public UserValidator()
+    public UserValidator(IUserService userService)
     {
-        RuleFor(x => x.FirstName)
-            .NotNull().WithMessage("FirstName is null")
-            .NotEmpty().WithMessage("FirstName is empty")
-            .Length(1, 150).WithMessage("Minimum lenght of FirstName is 1, Maximum is 150");
+        RuleFor(x => x.FirstName).Length(1, 150);
 
-        RuleFor(x => x.LastName)
-            .NotNull().WithMessage("LastName is null")
-            .NotEmpty().WithMessage("LastName is empty")
-            .Length(1, 150).WithMessage("Minimum lenght of LastName is 1, Maximum is 150");
+        RuleFor(x => x.LastName).Length(1, 150);
 
-        RuleFor(x => x.Email)
-            .NotNull().WithMessage("Email is null")
-            .NotEmpty().WithMessage("Email is empty")
-            .Length(1, 200).WithMessage("Minimum lenght of Email is 1, Maximum is 200")
-            .EmailAddress(EmailValidationMode.AspNetCoreCompatible).WithMessage("Wrong Email");
+        RuleFor(x => x.Email).Length(1, 200).EmailAddress(EmailValidationMode.AspNetCoreCompatible).Custom((x, context) =>
+        {
+            if (userService.Exists(x, context.InstanceToValidate.OrganizationId) > 0)
+            {
+                context.AddFailure("User with this email exists");
+            }
+        }); ;
 
-        RuleFor(x => x.Password)
-            .NotNull().WithMessage("Password is null")
-            .NotEmpty().WithMessage("Password is empty")
-            .Length(6, 30).WithMessage("Minimum lenght of Password is 6, Maximum is 30")
-            .Matches(@"^(?=.*\d)(?=.*[a-zA-Z]).{6,30}$").WithMessage("Only allow passwords with 6 or more alphanumeric characters");
+        RuleFor(x => x.Password).Length(6, 30).Matches(@"^(?=.*\d)(?=.*[a-zA-Z]).{6,30}$").WithMessage("Only allow passwords with 6 or more alphanumeric characters");
     }
 }
