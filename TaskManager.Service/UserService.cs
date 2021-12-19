@@ -22,4 +22,11 @@ public class UserService : IUserService
 
         return userId;
     }
+
+    public long Exists(string email, long organizationId)
+    {
+        long userId = this._appData.Users.Exists(email, organizationId);
+
+        return userId;
+    }
 }
