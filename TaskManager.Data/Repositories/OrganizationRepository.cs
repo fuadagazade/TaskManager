@@ -39,17 +39,41 @@ public class OrganizationRepository : IOrganizationRepository
         return result;
     }
 
-    public Task<bool> Delete(long id)
+    public async Task<bool> Delete(long id)
     {
-        throw new NotImplementedException();
+        string command = @"UPDATE Organizations SET STATUS = -1 WHERE Id = @id";
+
+        int result = 0;
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@id", id);
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.ExecuteAsync(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result > 0;
     }
 
-    public long Exists(string tag)
+    public long Exists(string tag, long id = 0)
     {
-        string command = @"SELECT Id FROM Organizations WHERE Tag = @Tag";
+        string command = @"SELECT Id FROM Organizations WHERE Tag = @Tag AND Id <> @Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Tag", tag);
+        parameters.Add("@Id", id);
 
         long result = 0;
 
@@ -72,18 +96,81 @@ public class OrganizationRepository : IOrganizationRepository
         return result;
     }
 
-    public Task<IEnumerable<Organization>> Get()
+    public async Task<IEnumerable<Organization>> Get()
     {
-        throw new NotImplementedException();
+        string command = @"SELECT * FROM Organizations WHERE Status > 0";
+
+        IEnumerable<Organization> result = null;
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.QueryAsync<Organization>(command);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result;
     }
 
-    public Task<Organization> Get(long id)
+    public async Task<Organization> Get(long id)
     {
-        throw new NotImplementedException();
+        string command = @"SELECT * FROM Organizations WHERE Status > 0 AND Id = @id";
+
+        Organization result = null;
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@id", id);
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.QueryFirstOrDefaultAsync<Organization>(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result;
     }
 
-    public Task<bool> Update(Organization data)
+    public async Task<bool> Update(Organization data)
     {
-        throw new NotImplementedException();
+        string command = @"UPDATE Organizations SET Name = @Name, Tag = @Tag, Phone = @Phone, Address = @Address, Logo = @Logo, Status = @Status WHERE Id = @id";
+
+        int result = 0;
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.ExecuteAsync(command, data);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result > 0;
     }
 }

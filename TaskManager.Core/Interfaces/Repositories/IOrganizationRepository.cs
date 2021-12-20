@@ -4,5 +4,5 @@ namespace TaskManager.Core.Interfaces.Repositories;
 
 public interface IOrganizationRepository:IBaseRepository<Organization>
 {
-    long Exists(string tag);
+    long Exists(string tag, long id = 0);
 }
