@@ -1,0 +1,51 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "28626611-3893-4a07-84d6-95f8993355eb": {
+      "ProjectGuid": "28626611-3893-4a07-84d6-95f8993355eb",
+      "DisplayName": "TaskManager.API",
+      "ColorIndex": 0
+    },
+    "bb217e77-253d-4734-963d-5c24df100724": {
+      "ProjectGuid": "bb217e77-253d-4734-963d-5c24df100724",
+      "DisplayName": "TaskManager.Core",
+      "ColorIndex": 1
+    },
+    "e94102c8-994b-465b-ac5b-8e5a9452cf28": {
+      "ProjectGuid": "e94102c8-994b-465b-ac5b-8e5a9452cf28",
+      "DisplayName": "TaskManager.Data",
+      "ColorIndex": 2
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "fdbc1ef8-642c-44cd-a308-e40b813486d3": {
+      "ProjectGuid": "fdbc1ef8-642c-44cd-a308-e40b813486d3",
+      "DisplayName": "TaskManager.Service",
+      "ColorIndex": 3
+    },
+    "39f87cb8-4e4b-4a13-ba94-78dd46cf15e0": {
+      "ProjectGuid": "39f87cb8-4e4b-4a13-ba94-78dd46cf15e0",
+      "DisplayName": "TaskManager.Core",
+      "ColorIndex": 4
+    },
+    "ef9beeb2-251a-4088-9bf4-51ed44e36d6f": {
+      "ProjectGuid": "ef9beeb2-251a-4088-9bf4-51ed44e36d6f",
+      "DisplayName": "TaskManager.Data",
+      "ColorIndex": 5
+    },
+    "e815704d-c990-4b8c-8eed-c798682006c2": {
+      "ProjectGuid": "e815704d-c990-4b8c-8eed-c798682006c2",
+      "DisplayName": "TaskManager.Service",
+      "ColorIndex": 6
+    },
+    "78e570cd-0676-47da-a80e-c59b9f775f16": {
+      "ProjectGuid": "78e570cd-0676-47da-a80e-c59b9f775f16",
+      "DisplayName": "TaskManager.Utility",
+      "ColorIndex": 7
+    }
+  },
+  "NextColorIndex": 8
+}
