@@ -1,4 +1,5 @@
 ﻿using Azersun.Audit.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Core.Enumerations;
 using TaskManager.Core.Interfaces.Services;
@@ -23,13 +24,12 @@ public class OrganizationController : ControllerBase
     }
 
     /// <summary>
-    /// Add new firm
+    /// Add new Organization
     /// </summary>
-    /// <param name="organization"></param>
+    /// <param name="data"></param>
     /// <returns>New Organization id</returns>
     /// <response code="200">New Organization is added</response>
     /// <response code="400">Params is not correct</response>  
-    /// <response code="401">Unauthorized</response> 
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] OrganizationRegistration data)
     {
@@ -73,6 +73,28 @@ public class OrganizationController : ControllerBase
         {
             return StatusCode(StatusCodes.Status400BadRequest);
         }
+    }
+
+    /// <summary>
+    /// Get Organizations
+    /// </summary>
+    /// <returns>Organizations list</returns>
+    /// <response code="200">Returns organizations list</response>
+    /// <response code="204">Organizations list is empty</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Don't have permissions</response>
+    [HttpGet]
+    [Authorize(Roles = "Owner")]
+    public async Task<IActionResult> Get()
+    {
+        IEnumerable<Organization> data = await this._organizationService.All();
+
+        if (data is null || data.Count<Organization>() == 0)
+        {
+            return StatusCode(StatusCodes.Status204NoContent, new List<Organization>());
+        }
+
+        return Ok(data);
     }
 
 }

@@ -1,10 +1,12 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using TaskManager.Core.Configs;
 using TaskManager.Core.Interfaces.Repositories;
 using TaskManager.Core.Interfaces.Services;
 using TaskManager.Core.Models;
@@ -17,7 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 DataContext.GenerateDatabase();
 
+builder.Services.Configure<TokenConfig>(builder.Configuration.GetSection("Token")).AddSingleton(sp => sp.GetRequiredService<IOptions<TokenConfig>>().Value);
+
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAppData, AppData>();
 builder.Services.AddTransient<IOrganizationService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();

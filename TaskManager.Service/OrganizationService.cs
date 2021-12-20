@@ -16,6 +16,13 @@ public class OrganizationService : IOrganizationService
         return organizationId;
     }
 
+    public async Task<IEnumerable<Organization>> All()
+    {
+        IEnumerable<Organization> organizations = await this._appData.Organizations.Get();
+
+        return organizations;
+    }
+
     public long Exists(string tag, long id = 0)
     {
         long organizationId = this._appData.Organizations.Exists(tag, id);
