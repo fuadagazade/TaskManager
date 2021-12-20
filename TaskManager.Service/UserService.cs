@@ -16,17 +16,17 @@ public class UserService : IUserService
         return userId;
     }
 
-    public long Exists(string email, string tag)
+    public long Exists(string email, string tag, long userId = 0)
     {
-        long userId = this._appData.Users.Exists(email, tag);
+        long id = this._appData.Users.Exists(email, tag, userId);
 
-        return userId;
+        return id;
     }
 
-    public long Exists(string email, long organizationId)
+    public long Exists(string email, long organizationId, long userId = 0)
     {
-        long userId = this._appData.Users.Exists(email, organizationId);
+        long id = this._appData.Users.Exists(email, organizationId, userId);
 
-        return userId;
+        return id;
     }
 }

@@ -14,7 +14,7 @@ public class UserValidator : AbstractValidator<User>
 
         RuleFor(x => x.Email).Length(1, 200).EmailAddress(EmailValidationMode.AspNetCoreCompatible).Custom((x, context) =>
         {
-            if (userService.Exists(x, context.InstanceToValidate.OrganizationId) > 0)
+            if (userService.Exists(x, context.InstanceToValidate.OrganizationId, context.InstanceToValidate.Id ?? 0) > 0)
             {
                 context.AddFailure("User with this email exists");
             }
