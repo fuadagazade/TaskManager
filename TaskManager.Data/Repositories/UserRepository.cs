@@ -319,4 +319,34 @@ public class UserRepository : IUserRepository
 
         return result > 0;
     }
+
+    public async Task<User> Identity(Authentication authentication)
+    {
+        string command = @"SELECT U.* FROM Users AS U INNER JOIN Organizations AS O ON U.OrganizationId = O.Id WHERE U.Email = @Email AND O.Tag = @Tag AND U.Password = @Password";
+
+        User result = null;
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Email", authentication.Email.ToLower());
+        parameters.Add("@Tag", authentication.Organization.ToLower());
+        parameters.Add("@Password", authentication.Password);
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.QueryFirstOrDefaultAsync<User>(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result;
+    }
 }

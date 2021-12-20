@@ -11,5 +11,5 @@ public interface IUserRepository : IBaseRepository<User>
     Task<IEnumerable<User>> GetByOrganization(long id);
     Task<bool> UpdatePassword(long userId, string password);
     Task<bool> UpdateRole(long userId, Role role);
-
+    Task<User> Identity(Authentication authentication);
 }
