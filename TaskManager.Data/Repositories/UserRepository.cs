@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using TaskManager.Core.Enumerations;
 using TaskManager.Core.Interfaces.Repositories;
 using TaskManager.Core.Models;
+using TaskManager.Core.Models.Table;
 
 namespace TaskManager.Data.Repositories;
 
@@ -348,5 +349,15 @@ public class UserRepository : IUserRepository
         }
 
         return result;
+    }
+
+    public Task<IEnumerable<User>> GetByOrganization(long id, Table table)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<long> Total(long id, Table table)
+    {
+        throw new NotImplementedException();
     }
 }

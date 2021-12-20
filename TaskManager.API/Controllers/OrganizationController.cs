@@ -1,9 +1,11 @@
 ﻿using Azersun.Audit.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskManager.Core.Enumerations;
 using TaskManager.Core.Interfaces.Services;
 using TaskManager.Core.Models;
+using TaskManager.Core.Models.Table;
 using TaskManager.Core.ViewModels;
 
 namespace TaskManager.API.Controllers;
@@ -87,7 +89,7 @@ public class OrganizationController : ControllerBase
     [Authorize(Roles = "Owner")]
     public async Task<IActionResult> Get()
     {
-        IEnumerable<Organization> data = await this._organizationService.All();
+        IEnumerable<Organization> data = await this._organizationService.Get();
 
         if (data is null || data.Count<Organization>() == 0)
         {
@@ -95,6 +97,108 @@ public class OrganizationController : ControllerBase
         }
 
         return Ok(data);
+    }
+
+    /// <summary>
+    /// Get Organization
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Organization</returns>
+    /// <response code="200">Returns organization</response>
+    /// <response code="204">Organization not found</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Don't have permissions</response>
+    [HttpGet("{id}")]
+    [Authorize]
+    public async Task<IActionResult> Get(string id)
+    {
+        IEnumerable<Claim> claims = (User.Identity as ClaimsIdentity).Claims;
+
+        string organizationId = claims.Where((c) => c.Type == "Organization").FirstOrDefault().Value;
+
+        if (organizationId != id)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new Organization());
+        }
+
+        Organization data = await this._organizationService.Get(long.Parse(id));
+
+        if (data is null)
+        {
+            return StatusCode(StatusCodes.Status204NoContent, new Organization());
+        }
+
+        return Ok(data);
+    }
+
+    /// <summary>
+    /// Get Organizations Table
+    /// </summary>
+    /// <returns>Organizations Table</returns>
+    /// <response code="200">Returns Organizations Table</response>
+    /// <response code="204">Organizations list is empty</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Don't have permissions</response>
+    [HttpGet("table")]
+    [Authorize(Roles = "Owner")]
+    public async Task<IActionResult> Get(Table table)
+    {
+        TableResponse<Organization> data = await this._organizationService.Get(table);
+
+        if (data is null)
+        {
+            return StatusCode(StatusCodes.Status204NoContent, new TableResponse<Organization>());
+        }
+
+        return Ok(data);
+    }
+
+    /// <summary>
+    /// Update Organization
+    /// </summary>
+    /// <param name="organization"></param>
+    /// <returns>Result of operation</returns>
+    /// <response code="200">Organization Updated</response>
+    /// <response code="400">Params is not correct</response>  
+    /// <response code="401">Unauthorized</response>
+    /// <response code="403">Don't have permissions</response>
+    [HttpPut]
+    [Authorize(Roles = "Owner,Admin")]
+    public async Task<IActionResult> Put([FromBody] OrganizationUpdate organization)
+    {
+        IEnumerable<Claim> claims = (User.Identity as ClaimsIdentity).Claims;
+
+        string organizationId = claims.Where((c) => c.Type == "Organization").FirstOrDefault().Value;
+
+        if (organizationId != organization.Id.ToString())
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new Organization());
+        }
+
+        bool result = await this._organizationService.Update(organization);
+
+        return result ? Ok() : StatusCode(StatusCodes.Status400BadRequest);
+    }
+
+    /// <summary>
+    /// Delete Organization
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>Result of operation</returns>
+    /// <response code="200">Organization Deleted</response>
+    /// <response code="400">Params is not correct</response>  
+    /// <response code="401">Unauthorized</response> 
+    /// <response code="403">Don't have permissions</response>
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Owner")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        bool result = await this._organizationService.Delete(id);
+
+        if (result)
+            return Ok(result);
+        else
+            return StatusCode(StatusCodes.Status400BadRequest);
     }
 
 }

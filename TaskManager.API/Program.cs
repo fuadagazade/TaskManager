@@ -19,13 +19,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 DataContext.GenerateDatabase();
 
+#region Mappers
+
 builder.Services.Configure<TokenConfig>(builder.Configuration.GetSection("Token")).AddSingleton(sp => sp.GetRequiredService<IOptions<TokenConfig>>().Value);
+
+#endregion
+
+#region Services
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAppData, AppData>();
 builder.Services.AddTransient<IOrganizationService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();
+
+#endregion
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -78,10 +87,14 @@ builder.Services.AddSwaggerGen(s =>
     s.IncludeXmlComments(path);
 });
 
+#region Validators
+
 builder.Services.AddTransient<IValidator<Organization>, OrganizationValidator>();
 builder.Services.AddTransient<IValidator<User>, UserValidator>();
 builder.Services.AddTransient<IValidator<OrganizationRegistration>, OrganizationRegistrationValidator>();
+builder.Services.AddTransient<IValidator<OrganizationUpdate>, OrganizationUpdateValidator>();
 
+#endregion
 
 var app = builder.Build();
 
