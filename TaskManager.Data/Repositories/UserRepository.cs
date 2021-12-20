@@ -327,9 +327,9 @@ public class UserRepository : IUserRepository
         User result = null;
 
         DynamicParameters parameters = new DynamicParameters();
-        parameters.Add("@Email", authentication.Email.ToLower());
-        parameters.Add("@Tag", authentication.Organization.ToLower());
-        parameters.Add("@Password", authentication.Password);
+        parameters.Add("@Email", authentication.Email);
+        parameters.Add("@Tag", authentication.Organization);
+        parameters.Add("@Password", authentication.Encrypted);
 
         using (IDbConnection connection = context)
         {
