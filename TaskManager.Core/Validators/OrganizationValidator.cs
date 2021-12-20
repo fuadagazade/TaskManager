@@ -11,7 +11,7 @@ public class OrganizationValidator : AbstractValidator<Organization>
 
         RuleFor(x=>x.Tag).Length(1, 150).Custom((x, context) =>
         {
-            if (organizationService.Exists(x) > 0)
+            if (organizationService.Exists(x, context.InstanceToValidate.Id ?? 0) > 0)
             {
                 context.AddFailure("Organization with this tag name exists");
             }

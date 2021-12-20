@@ -16,9 +16,9 @@ public class OrganizationService : IOrganizationService
         return organizationId;
     }
 
-    public long Exists(string tag)
+    public long Exists(string tag, long id = 0)
     {
-        long organizationId = this._appData.Organizations.Exists(tag);
+        long organizationId = this._appData.Organizations.Exists(tag, id);
 
         return organizationId;
     }
