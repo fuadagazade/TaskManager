@@ -223,9 +223,6 @@ public class OrganizationRepository : IOrganizationRepository
 
         int status = hasStatus ? Int32.Parse(table.Filter["status"]) : 1;
         string searchTerm = hasSearch ? table.Search : "";
-        string direction = table.Sorting.Direction;
-        int page = table.Paginator.Page;
-        int size = table.Paginator.Size;
 
         string search = $@"AND (UPPER(Name) LIKE UPPER(@SEARCH) OR Tag LIKE UPPER(@SEARCH))";
 

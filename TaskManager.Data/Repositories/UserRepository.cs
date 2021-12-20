@@ -351,13 +351,108 @@ public class UserRepository : IUserRepository
         return result;
     }
 
-    public Task<IEnumerable<User>> GetByOrganization(long id, Table table)
+    public async Task<IEnumerable<User>> GetByOrganization(long id, Table table)
     {
-        throw new NotImplementedException();
+        bool hasStatus = table.Filter.ContainsKey("status");
+        bool hasSearch = !string.IsNullOrEmpty(table.Search);
+
+        int status = hasStatus ? Int32.Parse(table.Filter["status"]) : 1;
+        string searchTerm = hasSearch ? table.Search : "";
+        string direction = table.Sorting.Direction;
+        int page = table.Paginator.Page;
+        int size = table.Paginator.Size;
+
+        string orderBy = table.Sorting.Column switch
+        {
+            "id" => "Id",
+            "firstName" => "FirstName",
+            "lastName" => "LastName",
+            "email" => "Email",
+            "status" => "Status",
+            _ => "Id"
+        };
+
+        string search = $@"AND (UPPER(FirstName) LIKE UPPER(@SEARCH) OR UPPER(LastName) LIKE UPPER(@SEARCH) OR Email LIKE LOWER(@SEARCH))";
+
+        string command = $@"SELECT Id, 
+                                    FirstName, 
+                                    LastName, 
+                                    Email,
+                                    [Status] 
+                                    FROM Users
+                                    WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}
+                                    ORDER BY {orderBy} {(direction == "desc" ? "DESC" : "ASC")}
+                                    {(page != -1 ? "OFFSET @OFFSET ROWS FETCH NEXT @FETCH ROWS ONLY" : "")}";
+
+        IEnumerable<User> result = null;
+
+        DynamicParameters parameters = new DynamicParameters();
+
+        if (hasStatus) parameters.Add(@"STATUS", status);
+        if (hasSearch) parameters.Add(@"SEARCH", $"%{searchTerm}%");
+
+        if (page != -1)
+        {
+            parameters.Add(@"OFFSET", page * size);
+            parameters.Add(@"FETCH", size);
+        }
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.QueryAsync<User>(command, parameters);
+            }
+            catch (Exception e)
+            {
+
+                return null;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+        return result;
     }
 
-    public Task<long> Total(long id, Table table)
+    public async Task<long> Total(long id, Table table)
     {
-        throw new NotImplementedException();
+        bool hasStatus = table.Filter.ContainsKey("status");
+        bool hasSearch = !string.IsNullOrEmpty(table.Search);
+
+        int status = hasStatus ? Int32.Parse(table.Filter["status"]) : 1;
+        string searchTerm = hasSearch ? table.Search : "";
+
+        string search = $@"AND (UPPER(Name) LIKE UPPER(@SEARCH) OR Tag LIKE UPPER(@SEARCH))";
+
+        string command = $@"SELECT COUNT(Id) 
+                            FROM Users
+                            WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}";
+
+        long result = 0;
+
+        DynamicParameters parameters = new DynamicParameters();
+
+        if (hasStatus) parameters.Add(@"STATUS", status);
+        if (hasSearch) parameters.Add(@"SEARCH", $"%{searchTerm}%");
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.ExecuteScalarAsync<long>(command, parameters);
+            }
+            catch (Exception e)
+            {
+
+                return 0;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+        return result;
     }
 }
