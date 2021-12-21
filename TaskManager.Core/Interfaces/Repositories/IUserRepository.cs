@@ -8,6 +8,7 @@ public interface IUserRepository : IBaseRepository<User>
 {
     long Exists(string email, string tag, long userId = 0);
     long Exists(string email, long organizationId, long userId = 0);
+    bool Exists(long id);
     Task<bool> DeleteByOrganization(long id);
     Task<IEnumerable<User>> GetByOrganization(long id);
     Task<IEnumerable<User>> GetByOrganization(long id, Table table);

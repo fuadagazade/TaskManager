@@ -9,6 +9,7 @@ public interface IOrganizationService
     Task<long> Add(Organization organization);
     Task<IEnumerable<Organization>> Get();
     long Exists(string tag, long id = 0);
+    bool Exists(long id);
     Task<bool> Delete(long id);
     Task<Organization> Get(long id);
     Task<bool> Update(OrganizationUpdate data);

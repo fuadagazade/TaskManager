@@ -1,10 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 using TaskManager.Core.Enumerations;
 
-namespace TaskManager.Core.Models;
+namespace TaskManager.Core.ViewModels;
 
-public class Task : BaseModel
+public class TaskView
 {
+    [JsonPropertyName("id")]
+    public long Id { get; set; }
+
     [JsonPropertyName("title")]
     public string Title { get; set; }
 
@@ -31,4 +34,7 @@ public class Task : BaseModel
 
     [JsonPropertyName("createDate")]
     public DateTime CreateDate { get; set; }
+
+    [JsonPropertyName("assigments")]
+    public IEnumerable<TaskUser> Assigments { get; set; }
 }

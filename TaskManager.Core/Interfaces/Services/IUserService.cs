@@ -9,6 +9,7 @@ public interface IUserService
     Task<long> Add(User user);
     long Exists(string email, string tag, long userId = 0);
     long Exists(string email, long organizationId, long userId = 0);
+    bool Exists(long id);
     Task<bool> Delete(long id);
     Task<User> Get(long id);
     Task<IEnumerable<User>> Get();

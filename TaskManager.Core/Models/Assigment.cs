@@ -2,7 +2,7 @@
 
 namespace TaskManager.Core.Models;
 
-public class Assigments : BaseModel
+public class Assigment : BaseModel
 {
     [JsonPropertyName("taskId")]
     public long TaskId { get; set; }

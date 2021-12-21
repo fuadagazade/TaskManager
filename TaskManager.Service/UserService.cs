@@ -39,6 +39,13 @@ public class UserService : IUserService
         return id;
     }
 
+    public bool Exists(long id)
+    {
+        bool result = this._appData.Users.Exists(id);
+
+        return result;
+    }
+
     public async Task<User> Get(long id)
     {
         User user = await this._appData.Users.Get(id);

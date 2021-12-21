@@ -483,4 +483,32 @@ public class UserRepository : IUserRepository
 
         return result;
     }
+
+    public bool Exists(long id)
+    {
+        string command = @"SELECT Id FROM Users WHERE Id <> @UserId";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@UserId", id);
+
+        long result = 0;
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = connection.ExecuteScalar<long>(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result > 0;
+    }
 }

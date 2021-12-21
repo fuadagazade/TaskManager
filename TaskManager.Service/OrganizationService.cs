@@ -71,4 +71,11 @@ public class OrganizationService : IOrganizationService
 
         return result;
     }
+
+    public bool Exists(long id)
+    {
+        bool result = this._appData.Organizations.Exists(id);
+
+        return result;
+    }
 }
