@@ -180,7 +180,7 @@ public class OrganizationRepository : IOrganizationRepository
                                     Address, 
                                     [Status] 
                                     FROM Organizations
-                                    WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}
+                                    WHERE 1=1 {(hasStatus ? "AND Status = @STATUS" : "")} {(hasSearch ? search : "")}
                                     ORDER BY {orderBy} {(direction == "desc" ? "DESC" : "ASC")}
                                     {(page != -1 ? "OFFSET @OFFSET ROWS FETCH NEXT @FETCH ROWS ONLY" : "")}";
 
@@ -228,7 +228,7 @@ public class OrganizationRepository : IOrganizationRepository
 
         string command = $@"SELECT COUNT(Id) 
                             FROM Organizations
-                            WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}";
+                            WHERE 1=1 {(hasStatus ? "AND Status = @STATUS" : "")} {(hasSearch ? search : "")}";
 
         long result = 0;
 

@@ -380,7 +380,7 @@ public class UserRepository : IUserRepository
                                     Email,
                                     [Status] 
                                     FROM Users
-                                    WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}
+                                    WHERE 1=1 {(hasStatus ? "AND Status = @STATUS" : "")} {(hasSearch ? search : "")}
                                     ORDER BY {orderBy} {(direction == "desc" ? "DESC" : "ASC")}
                                     {(page != -1 ? "OFFSET @OFFSET ROWS FETCH NEXT @FETCH ROWS ONLY" : "")}";
 
@@ -428,7 +428,7 @@ public class UserRepository : IUserRepository
 
         string command = $@"SELECT COUNT(Id) 
                             FROM Users
-                            WHERE 1=1 {(hasStatus ? "AND STATUS = @STATUS" : "")} {(hasSearch ? search : "")}";
+                            WHERE 1=1 {(hasStatus ? "AND Status = @STATUS" : "")} {(hasSearch ? search : "")}";
 
         long result = 0;
 
@@ -453,6 +453,34 @@ public class UserRepository : IUserRepository
                 connection.Dispose();
             }
         }
+        return result;
+    }
+
+    public async Task<string> GetPassword(long userId)
+    {
+        string command = @"SELECT Password FROM Users WHERE Status > 0 AND Id = @Id";
+
+        string result = "";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Id", userId);
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.QueryFirstOrDefaultAsync<string>(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
         return result;
     }
 }
