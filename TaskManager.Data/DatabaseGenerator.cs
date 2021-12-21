@@ -9,6 +9,8 @@ public static class DatabaseGenerator
     {
         Organizations(connection);
         Users(connection);
+        Tasks(connection);
+        Assigments(connection);
     }
 
     private static void Organizations(IDbConnection connection)
@@ -46,6 +48,47 @@ public static class DatabaseGenerator
                                 [Approved]          bit DEFAULT 0,
                                 [Status]            int DEFAULT 1,
                                 CONSTRAINT UC_User UNIQUE (Email,OrganizationId)
+                            );";
+
+        try
+        {
+            connection.Execute(command);
+        }
+        catch (Exception ex) { return; }
+    }
+
+    private static void Tasks(IDbConnection connection)
+    {
+        string command = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Tasks' AND xtype='U')
+                            CREATE TABLE [dbo].[Tasks] (
+                                [Id]                INT IDENTITY (1, 1) PRIMARY KEY,
+                                [Title]             NVARCHAR (250) NOT NULL,
+                                [Description]       NVARCHAR (MAX),
+                                [Priority]          int DEFAULT 1,
+                                [Point]             int DEFAULT 1,
+                                [State]             int DEFAULT 1,
+                                [Deadline]          datetime,
+                                [OrganizationId]    int FOREIGN KEY REFERENCES Organizations(Id) NOT NULL,
+                                [CreatorId]         int FOREIGN KEY REFERENCES Users(Id) NOT NULL,
+                                [CreateDate]        datetime DEFAULT GETDATE(),
+                                [Status]            int DEFAULT 1
+                            );";
+
+        try
+        {
+            connection.Execute(command);
+        }
+        catch (Exception ex) { return; }
+    }
+
+    private static void Assigments(IDbConnection connection)
+    {
+        string command = $@"IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Assigments' AND xtype='U')
+                            CREATE TABLE [dbo].[Assigments] (
+                                [Id]                INT IDENTITY (1, 1) PRIMARY KEY,
+                                [TaskId]            int FOREIGN KEY REFERENCES Tasks(Id) NOT NULL,
+                                [UserId]            int FOREIGN KEY REFERENCES Users(Id) NOT NULL,
+                                [Status]            int DEFAULT 1
                             );";
 
         try
