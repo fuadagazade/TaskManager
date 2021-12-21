@@ -93,6 +93,7 @@ builder.Services.AddTransient<IValidator<Organization>, OrganizationValidator>()
 builder.Services.AddTransient<IValidator<User>, UserValidator>();
 builder.Services.AddTransient<IValidator<OrganizationRegistration>, OrganizationRegistrationValidator>();
 builder.Services.AddTransient<IValidator<OrganizationUpdate>, OrganizationUpdateValidator>();
+builder.Services.AddTransient<IValidator<PasswordUpdate>, PasswordUpdateValidator>();
 
 #endregion
 
