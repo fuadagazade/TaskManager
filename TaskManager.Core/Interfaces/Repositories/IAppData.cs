@@ -4,4 +4,6 @@ public interface IAppData
 {
     IOrganizationRepository Organizations { get; }
     IUserRepository Users { get; }
+    ITaskRepository Tasks { get; }
+
 }

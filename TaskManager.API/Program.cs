@@ -14,6 +14,7 @@ using TaskManager.Core.Validators;
 using TaskManager.Core.ViewModels;
 using TaskManager.Data;
 using TaskManager.Service;
+using Task = TaskManager.Core.Models.Task;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAppData, AppData>();
 builder.Services.AddTransient<IOrganizationService, OrganizationService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITaskService, TaskService>();
 
 #endregion
 

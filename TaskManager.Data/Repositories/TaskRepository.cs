@@ -70,6 +70,36 @@ public class TaskRepository : ITaskRepository
         return result;
     }
 
+    public async Task<bool> ChangeState(long id, State state)
+    {
+        string command = @"UPDATE Tasks SET State = @State WHERE Id = @Id";
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@Id", id);
+        parameters.Add("@State", state);
+
+
+        int result = 0;
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.ExecuteAsync(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result > 0;
+    }
+
     public async Task<bool> Delete(long id)
     {
         string command = @"UPDATE Tasks SET STATUS = -1 WHERE Id = @id";
@@ -78,6 +108,35 @@ public class TaskRepository : ITaskRepository
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@id", id);
+
+        using (IDbConnection connection = context)
+        {
+            try
+            {
+                result = await connection.ExecuteAsync(command, parameters);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            finally
+            {
+                connection.Dispose();
+            }
+        }
+
+        return result > 0;
+    }
+
+    public async Task<bool> DeleteAssigment(Assigment assigment)
+    {
+        string command = @"UPDATE Assigments SET STATUS = -1 WHERE TaskId = @TaskId AND UserId = @UserId";
+
+        int result = 0;
+
+        DynamicParameters parameters = new DynamicParameters();
+        parameters.Add("@TaskId", assigment.TaskId);
+        parameters.Add("@UserId", assigment.UserId);
 
         using (IDbConnection connection = context)
         {

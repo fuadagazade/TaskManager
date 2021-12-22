@@ -1,4 +1,5 @@
-﻿using TaskManager.Core.Models;
+﻿using TaskManager.Core.Enumerations;
+using TaskManager.Core.Models;
 using TaskManager.Core.Models.Table;
 using TaskManager.Core.ViewModels;
 using Task = TaskManager.Core.Models.Task;
@@ -14,6 +15,8 @@ public interface ITaskRepository :IBaseRepository<Task>
     Task<long> UserTasksTotal(long id, Table table);
     bool Exists(long id);
     Task<bool> DeleteAssigments(long id);
+    Task<bool> DeleteAssigment(Assigment assigment);
+    Task<bool> ChangeState(long id, State state);
     Task<TaskView> GetView(long id);
     Task<IEnumerable<TaskView>> GetViews(long id);
 }
