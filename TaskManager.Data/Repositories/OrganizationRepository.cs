@@ -100,7 +100,7 @@ public class OrganizationRepository : IOrganizationRepository
 
     public bool Exists(long id)
     {
-        string command = @"SELECT Id FROM Organizations WHERE Id <> @Id";
+        string command = @"SELECT Id FROM Organizations WHERE Id = @Id";
 
         DynamicParameters parameters = new DynamicParameters();
         parameters.Add("@Id", id);
